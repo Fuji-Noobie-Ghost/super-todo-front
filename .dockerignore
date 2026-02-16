@@ -1,0 +1,74 @@
+# Dependencies
+node_modules
+.pnpm-store
+.npm
+.yarn
+
+# Build outputs
+dist
+build
+out
+.next
+.nuxt
+
+# Development files
+.git
+.gitignore
+.gitattributes
+.github
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Environment files
+.env*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage
+.nyc_output
+*.lcov
+.jest
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Docker files (on évite la récursion)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.travis.yml
+.gitlab-ci.yml
+.circleci
+.github/workflows
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+docs
+*.md
+
+# Temp files
+tmp
+temp
+.cache
+.parcel-cache
+.eslintcache
+.stylelintcache
+
+./scripts
