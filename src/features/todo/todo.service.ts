@@ -27,7 +27,7 @@ class TodoServiceImpl implements TodoService {
     }
   }
 
-  async create(todo: CreateTodoSchema): Promise<Todo> {
+  create = async (todo: CreateTodoSchema): Promise<Todo> => {
     try {
       const { data } = await this.client.post('/todo', todo)
       return data
@@ -36,19 +36,21 @@ class TodoServiceImpl implements TodoService {
     }
   }
 
-  async update(id: number, payload: UpdateTodoSchema): Promise<Todo> {
+  update = async (id: number, payload: UpdateTodoSchema): Promise<Todo> => {
     try {
       const { data } = await this.client.patch(`/todo/${id}`, payload)
       return data
     } catch (error) {
+      console.error(error)
       throw new Error('')
     }
   }
 
-  async delete(id: number): Promise<void> {
+  delete = async (id: number): Promise<void> => {
     try {
       await this.client.delete(`/todo/${id}`)
     } catch (error) {
+      console.error(error)
       throw new Error('')
     }
   }

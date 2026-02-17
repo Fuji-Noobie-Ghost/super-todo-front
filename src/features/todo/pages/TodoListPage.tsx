@@ -1,11 +1,10 @@
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Typography } from "@mui/material";
 import { TodoList } from "../components/TodoList";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { todoService } from "../todo.service";
-import { ErrorOutline } from "@mui/icons-material";
+import { Add, ErrorOutline } from "@mui/icons-material";
 
 export function TodoListPage() {
-  const queryClient = useQueryClient()
   const query = useQuery({
     queryKey: ['todos'],
     queryFn: todoService.getAll,
@@ -18,6 +17,8 @@ export function TodoListPage() {
           <Typography variant="h4">Make your</Typography>
           <Typography variant="h2" sx={{ fontWeight: 'bold' }} >Super Todo</Typography>
         </Box>
+
+        <Button variant="contained" sx={{ boxShadow: 'none', width: 'fit-content' }}><Add sx={{ mr: '4px' }} />New Todo</Button>
 
         {query.isLoading &&
           <Box >
