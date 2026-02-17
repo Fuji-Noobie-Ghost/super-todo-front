@@ -8,6 +8,7 @@ export interface Todo {
   title: string
   description: string
   status: TodoStatus
+  dueDate: Date
   createdAt: Date
   updatedAt: Date
 }

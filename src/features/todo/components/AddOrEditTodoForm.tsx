@@ -1,8 +1,13 @@
 import { Controller, FormProvider, useForm } from "react-hook-form"
-import { createTodoSchema, type CreateTodoSchema, type UpdateTodoSchema } from "../todo.schema"
+import { createTodoSchema, type CreateTodoFormValues, type CreateTodoSchema } from "../todo.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import type { Todo } from "../todo.types"
-import { Box, Button, TextareaAutosize, TextField } from "@mui/material"
+import { Box, Button, TextField } from "@mui/material"
+import { Save } from "@mui/icons-material"
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from "dayjs"
 
 interface AddOrEditTodoFormProps {
   todo?: Todo | null
@@ -10,47 +15,83 @@ interface AddOrEditTodoFormProps {
 }
 
 export function AddOrEditTodoForm({ todo, onSubmit }: AddOrEditTodoFormProps) {
-  const form = useForm<CreateTodoSchema>({
+  const form = useForm<CreateTodoFormValues, unknown, CreateTodoSchema>({
     resolver: zodResolver(createTodoSchema),
     defaultValues: {
       title: todo?.title ?? '',
-      description: todo?.description ?? ''
+      description: todo?.description ?? '',
+      dueDate: todo?.dueDate ? dayjs(todo.dueDate) : dayjs(),
     }
   })
 
   const submitHandler = (payload: CreateTodoSchema) => {
+    console.log(payload)
     onSubmit(payload, todo)
   }
 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(submitHandler)}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px', py: '20px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            py: '20px',
+          }}
+        >
           <Controller
             control={form.control}
             name="title"
-            render={({field}) => (
-              <TextField variant="outlined" label="Title" {...field} />
+            render={({field, fieldState}) => (
+              <TextField 
+                variant="outlined"
+                label="Title"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message as string}
+                {...field}
+              />
             )}
           />
           <Controller
             control={form.control}
             name="description"
-            render={({field}) => (
-              <TextareaAutosize
-                minRows={5}
-                maxRows={10}
-                placeholder="Description..."
-                style={{
-                  padding: '12px',
-                  fontFamily: 'Poppins'
-                }}
+            render={({field, fieldState}) => (
+              <TextField
+                label="Description"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message as string}
+                multiline
+                rows={5}
                 {...field}
-              /> 
+              />
             )}
           />
+          <Controller
+            control={form.control}
+            name="dueDate"
+            render={({field, fieldState}) => (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Due date"
+                  value={field.value ?? null}
+                  onChange={(date: Dayjs | null) => field.onChange(date)}
+                  minDateTime={dayjs()}
+                  slotProps={{
+                    textField: {
+                      error: !!fieldState.error,
+                      helperText: fieldState.error?.message,
+                      onBlur: field.onBlur,
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            )}
+          />
+          <Button type="submit" variant="contained">
+            <Save sx={{ mr: '4px' }} /> Save
+          </Button>
         </Box>
-        <Button type="submit" variant="contained">Save</Button>
       </form>
     </FormProvider>
   )

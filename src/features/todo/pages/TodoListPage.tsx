@@ -10,8 +10,8 @@ export function TodoListPage() {
   const todoQuery = useTodos()
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center' }}>
-      <Container sx={{ width: '568px', padding: '48px 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <Box sx={{ height: '98vh', display: 'flex', justifyContent: 'center' }}>
+      <Container maxWidth='sm' sx={{ padding: '48px 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Box>
           <Typography variant="h4">Make your</Typography>
           <Typography variant="h2" sx={{ fontWeight: 'bold' }} >Super Todo</Typography>

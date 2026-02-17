@@ -14,8 +14,10 @@ export function TodoModalManager() {
   const createOrUpdate = (payload: CreateTodoSchema, todo?: Todo | null) => {
     if (todo) {
       const newPayload: UpdateTodoSchema = {}
+
       if (todo.title !== payload.title) newPayload.title = payload.title
       if (todo.description !== payload.description) newPayload.description = payload.description
+      if (todo.dueDate !== payload.dueDate) newPayload.dueDate = payload.dueDate
 
       updateTodo.mutate({
         id: todo.id,
