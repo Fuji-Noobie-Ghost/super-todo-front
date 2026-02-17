@@ -38,8 +38,8 @@ export function TodoModalProvider({ children }: TodoModalProviderProps) {
   }
 
   const closeAddOrEditModal = () => {
-    setSelectedTodo(null)
     setIsAddOrEditModalOpen(false)
+    setSelectedTodo(null)
   }
 
   return (
