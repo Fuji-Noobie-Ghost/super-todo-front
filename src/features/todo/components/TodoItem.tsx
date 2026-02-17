@@ -1,6 +1,6 @@
 import { Box, Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { TodoStatus, type Todo } from "../todo.types";
-import { CalendarMonth, CalendarToday, Delete, Edit } from "@mui/icons-material";
+import { CalendarToday, Delete, Edit } from "@mui/icons-material";
 import { blue, red } from "@mui/material/colors";
 
 interface TodoItemProps {

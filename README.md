@@ -58,11 +58,6 @@ Copy `.env.example` to `.env` and configure:
 VITE_API_BASE_URL=
 ```
 
-> **Docker Networking Note:** When running the frontend in Docker, the API URL must be accessible from within the container network.
-> - For local development with a backend on the same machine, use `http://host.docker.internal:PORT` (Mac/Windows) or `http://<host-ip>:PORT` (Linux).
-> - For production or containerized backends, use the internal Docker network service name (e.g., `http://api-service:8080`).
-> - `localhost` will NOT work from inside a Docker container.
-
 ## Docker
 
 Build and run with Docker:

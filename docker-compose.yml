@@ -1,0 +1,20 @@
+services:
+  todo-front:
+    build:
+      context: .
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000/api}
+    container_name: todo-front
+    image: todo-front:latest
+    ports:
+      - "80:80"
+    depends_on:
+      todo-api:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - todo-app-network
+
+networks:
+  todo-app-network:
+    name: todo-app-network

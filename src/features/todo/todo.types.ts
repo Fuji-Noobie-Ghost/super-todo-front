@@ -1,7 +1,10 @@
-export enum TodoStatus {
-  PENDING = 'pending',
-  COMPLETED = 'completed'
-}
+export const TodoStatus = {
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+} as const
+
+// Recréer le type
+export type TodoStatus = typeof TodoStatus[keyof typeof TodoStatus]
 
 export interface Todo {
   id: number
