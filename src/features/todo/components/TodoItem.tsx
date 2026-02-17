@@ -1,17 +1,19 @@
-import { Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Box, Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { TodoStatus, type Todo } from "../todo.types";
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
 
 interface TodoItemProps {
   todo: Todo
+  onEdit: (todo: Todo) => void
   onDelete: (todo: Todo) => void
   toggleStatus: (todo: Todo) => void
 }
 
-export function TodoItem({ todo, onDelete, toggleStatus }: TodoItemProps) {
+export function TodoItem({ onEdit, todo, onDelete, toggleStatus }: TodoItemProps) {
   const handleDelete = () => onDelete(todo)
   const handleToggleStatus = () => toggleStatus(todo)
+  const handleEdit = () => onEdit(todo)
 
   return (
     <ListItem
@@ -24,9 +26,16 @@ export function TodoItem({ todo, onDelete, toggleStatus }: TodoItemProps) {
         bgcolor: todo.status === TodoStatus.COMPLETED ? blue[100] : 'white',
       }}
       secondaryAction={
-        <IconButton edge="end" onClick={handleDelete}>
-          <Delete color="error"/>
-        </IconButton>
+        <Box>
+          {todo.status !== TodoStatus.COMPLETED &&
+            <IconButton edge="end" onClick={handleEdit}>
+              <Edit />
+            </IconButton>
+          }
+          <IconButton edge="end" onClick={handleDelete}>
+            <Delete color="error"/>
+          </IconButton>
+        </Box>
       }
     >
       <ListItemAvatar>

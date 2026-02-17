@@ -5,10 +5,12 @@ interface DeleteTodoConfirmationModalProps {
   todo: Todo
   isOpen: boolean
   onClose: () => void
-  onConfirm: () => void
+  onConfirm: (todo: Todo) => void
 }
 
 export function DeleteTodoConfirmationModal({ todo, onClose, isOpen, onConfirm }: DeleteTodoConfirmationModalProps) { 
+  const onSubmit = () => onConfirm(todo)
+
   return (
     <Dialog
       open={isOpen}
@@ -26,7 +28,7 @@ export function DeleteTodoConfirmationModal({ todo, onClose, isOpen, onConfirm }
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" color="error" onClick={onConfirm} autoFocus>
+        <Button variant="contained" color="error" onClick={onSubmit} autoFocus>
           Confirm
         </Button>
       </DialogActions>

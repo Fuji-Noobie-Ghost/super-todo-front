@@ -1,14 +1,13 @@
 import { Box, Button, CircularProgress, Container, Typography } from "@mui/material";
 import { TodoList } from "../components/TodoList";
-import { useQuery } from "@tanstack/react-query";
-import { todoService } from "../todo.service";
 import { Add, ErrorOutline } from "@mui/icons-material";
+import { useTodoModal } from "../TodoModal";
+import { useTodos } from "../todo.queries";
+import { TodoModalManager } from "../TodoModalManager";
 
 export function TodoListPage() {
-  const query = useQuery({
-    queryKey: ['todos'],
-    queryFn: todoService.getAll,
-  })
+  const todoModal = useTodoModal()
+  const todoQuery = useTodos()
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center' }}>
@@ -18,21 +17,29 @@ export function TodoListPage() {
           <Typography variant="h2" sx={{ fontWeight: 'bold' }} >Super Todo</Typography>
         </Box>
 
-        <Button variant="contained" sx={{ boxShadow: 'none', width: 'fit-content' }}><Add sx={{ mr: '4px' }} />New Todo</Button>
+        <Button
+          variant="contained"
+          sx={{ boxShadow: 'none', width: 'fit-content' }}
+          onClick={() => todoModal.openAddOrEditModal(null)}
+        >
+          <Add sx={{ mr: '4px' }} />
+          New Todo
+        </Button>
 
-        {query.isLoading &&
+        {todoQuery.isLoading &&
           <Box >
             <CircularProgress size='3rem' />
           </Box>
         }
-        {query.isError &&
+        {todoQuery.isError &&
           <Box sx={{ display: 'flex', gap: '0.2rem' }}>
             <ErrorOutline color="error" />
-            <Typography color="error">{query.error.message}</Typography>
+            <Typography color="error">{todoQuery.error.message}</Typography>
           </Box>
         }
-        {query.isSuccess && <TodoList todos={query.data} /> }
+        {todoQuery.isSuccess && <TodoList todos={todoQuery.data} /> }
       </Container>
+      <TodoModalManager />
     </Box>
   )
 }
