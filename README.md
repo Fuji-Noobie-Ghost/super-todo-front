@@ -1,75 +1,93 @@
-# React + TypeScript + Vite
+# Super Todo Front
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern todo application frontend built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Material-UI** - UI component library
+- **React Query** - Data fetching and state management
+- **React Hook Form** - Form handling
+- **Zod** - Schema validation
+- **Axios** - HTTP client
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Node.js 23+
+- pnpm (enabled via corepack)
 
-Note: This will impact Vite dev & build performances.
+## Getting Started
 
-## Expanding the ESLint configuration
+### Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev
 ```
+
+### Build
+
+```bash
+pnpm build
+```
+
+### Lint
+
+```bash
+pnpm lint
+```
+
+### Preview Production Build
+
+```bash
+pnpm preview
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```env
+VITE_API_BASE_URL=
+```
+
+> **Docker Networking Note:** When running the frontend in Docker, the API URL must be accessible from within the container network.
+> - For local development with a backend on the same machine, use `http://host.docker.internal:PORT` (Mac/Windows) or `http://<host-ip>:PORT` (Linux).
+> - For production or containerized backends, use the internal Docker network service name (e.g., `http://api-service:8080`).
+> - `localhost` will NOT work from inside a Docker container.
+
+## Docker
+
+Build and run with Docker:
+
+```bash
+docker build --build-arg VITE_API_BASE_URL=http://your-api-url -t super-todo-front .
+docker run -p 80:80 super-todo-front
+```
+
+## Project Structure
+
+```
+src/
+├── core/           # Core utilities and configurations
+│   └── api/        # API client setup
+├── features/       # Feature modules
+│   └── todo/       # Todo feature (components, pages, services, queries, mutations)
+├── components/     # Shared components
+├── App.tsx         # Root component
+└── main.tsx        # Entry point
+```
+
+## Features
+
+- Create, read, update, and delete todos
+- Form validation with Zod
+- Optimistic updates with React Query
+- Responsive UI with Material-UI
