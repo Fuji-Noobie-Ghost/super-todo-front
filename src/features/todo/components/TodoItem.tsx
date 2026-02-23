@@ -1,8 +1,9 @@
-import { Box, Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Box, Button, Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Popover, Typography } from "@mui/material";
 import { TodoStatus, type Todo } from "../todo.types";
-import { CalendarToday, Delete, Edit, Visibility } from "@mui/icons-material";
+import { CalendarToday, Delete, Edit, MoreVert, Visibility } from "@mui/icons-material";
 import { blue, red } from "@mui/material/colors";
 import { DateFormat } from "../../../core/utils/format";
+import { useState } from "react";
 
 interface TodoItemProps {
   todo: Todo
@@ -28,6 +29,20 @@ export function TodoItem({ onEdit, onViewDetail, todo, onDelete, toggleStatus }:
 
   const isExpired = todo.status !== TodoStatus.COMPLETED && normalizedDueDate <= new Date()
 
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'action-popover' : undefined;
+
   return (
     <ListItem
       sx={{
@@ -43,19 +58,58 @@ export function TodoItem({ onEdit, onViewDetail, todo, onDelete, toggleStatus }:
           : isExpired ? red[100] : 'white',
       }}
       secondaryAction={
-        <Box display='flex' gap='12px'>
-          <IconButton edge="end" onClick={handleViewDetail}>
-            <Visibility />
+        <>
+          <IconButton
+            aria-describedby={id}
+            sx={{ display: { xs: 'block', sm: 'none' } }}
+            edge='end'
+            onClick={handleClick}
+          >
+            <MoreVert />
           </IconButton>
-          {todo.status !== TodoStatus.COMPLETED &&
-            <IconButton edge="end" onClick={handleEdit}>
-              <Edit />
+          <Popover 
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <Box display='flex' flexDirection='column' alignItems='center' justifyContent='center' width='100px' gap='12px' padding='4px'>
+              <Button onClick={handleViewDetail}>
+                <Visibility sx={{ mr: '8px' }} /> Detail
+              </Button>
+              {todo.status !== TodoStatus.COMPLETED &&
+                <Button onClick={handleEdit}>
+                  <Edit sx={{ mr: '8px' }}/> Edit
+                </Button>
+              }
+              <Button onClick={handleDelete} color="error">
+                <Delete color="error" sx={{ mr: '8px' }}/> Delete
+              </Button>
+            </Box>
+          </Popover>
+
+          <Box display={{ xs: 'none', sm: 'flex' }} gap='12px'>
+            <IconButton edge="end" onClick={handleViewDetail}>
+              <Visibility />
             </IconButton>
-          }
-          <IconButton edge="end" onClick={handleDelete}>
-            <Delete color="error"/>
-          </IconButton>
-        </Box>
+            {todo.status !== TodoStatus.COMPLETED &&
+              <IconButton edge="end" onClick={handleEdit}>
+                <Edit />
+              </IconButton>
+            }
+            <IconButton edge="end" onClick={handleDelete}>
+              <Delete color="error"/>
+            </IconButton>
+          </Box>
+        </>
       }
     >
       <ListItemAvatar>

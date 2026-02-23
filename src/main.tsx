@@ -11,6 +11,15 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Poppins", sans-serif',
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none', // Ensures all buttons are uppercase
+        },
+      },
+    },
+  },
 });
 
 createRoot(document.getElementById('root')!).render(
