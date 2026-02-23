@@ -39,6 +39,7 @@ export function TodoList({ todos }: TodoListProps) {
               toggleStatus={onStatusToggle}
               onEdit={todoModal.openAddOrEditModal}
               onDelete={todoModal.openDeleteConfirmation}
+              onViewDetail={todoModal.openTodoDetail}
             />
           </Box>
         ))}

@@ -2,15 +2,12 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import type { Todo } from "./todo.types";
 
 interface ITodoModalContext {
-  isAddOrEditModalOpen: boolean
-  isDeleteConfirmationOpen: boolean
-  isDetailOpen: boolean
+  isModalOpen: boolean
+  modalType: TodoModalType | null
   openDeleteConfirmation: (todo: Todo) => void
-  closeDeleteConfirmation: () => void
   openAddOrEditModal: (todo: Todo | null) => void
-  closeAddOrEditModal: () => void
   openTodoDetail: (todo: Todo) => void
-  closeTodoDetail: () => void
+  closeModal: () => void
   selectedTodo: Todo | null
 }
 
@@ -20,55 +17,48 @@ interface TodoModalProviderProps {
   children: ReactNode
 }
 
+export const TodoModalType = {
+  DETAIL: 'DETAIL',
+  ADD_OR_EDIT: 'ADD_OR_EDIT',
+  DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
+} as const
+
+export type TodoModalType = typeof TodoModalType[keyof typeof TodoModalType]
+
 export function TodoModalProvider({ children }: TodoModalProviderProps) {
-  const [isDeleteConfirmationOpen, setIsDeleteConfirmation] = useState(false)
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null)
-  const [isAddOrEditModalOpen, setIsAddOrEditModalOpen] = useState(false)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [modalType, setModalType] = useState<TodoModalType | null>(null)
 
   const openDeleteConfirmation = (todo: Todo) => {
     setSelectedTodo(todo)
-    setIsDeleteConfirmation(true)
+    setModalType(TodoModalType.DELETE_CONFIRMATION)
   }
 
-  const closeDeleteConfirmation = () => {
-    setIsDeleteConfirmation(false)
+  const closeModal = () => {
+    setModalType(null)
     setSelectedTodo(null)
   }
 
   const openAddOrEditModal = (todo: Todo | null) => {
     setSelectedTodo(todo)
-    setIsAddOrEditModalOpen(true)
-  }
-
-  const closeAddOrEditModal = () => {
-    setIsAddOrEditModalOpen(false)
-    setSelectedTodo(null)
+    setModalType(TodoModalType.ADD_OR_EDIT)
   }
 
   const openTodoDetail = (todo: Todo) => {
     setSelectedTodo(todo)
-    setIsDetailOpen(true)
-  }
-
-  const closeTodoDetail = () => {
-    setIsDetailOpen(false)
-    setSelectedTodo(null)
+    setModalType(TodoModalType.DETAIL)
   }
 
   return (
     <TodoModalContext.Provider
       value={{
-        isDeleteConfirmationOpen,
+        isModalOpen: modalType !== null,
+        modalType,
         openDeleteConfirmation,
-        closeDeleteConfirmation,
-        isAddOrEditModalOpen,
         openAddOrEditModal,
-        closeAddOrEditModal,
-        isDetailOpen,
         openTodoDetail,
-        closeTodoDetail,
         selectedTodo,
+        closeModal,
       }}
     >
       {children}

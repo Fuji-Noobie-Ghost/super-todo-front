@@ -1,26 +1,30 @@
 import { Box, Checkbox, IconButton, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { TodoStatus, type Todo } from "../todo.types";
-import { CalendarToday, Delete, Edit } from "@mui/icons-material";
+import { CalendarToday, Delete, Edit, Visibility } from "@mui/icons-material";
 import { blue, red } from "@mui/material/colors";
+import { DateFormat } from "../../../core/utils/format";
 
 interface TodoItemProps {
   todo: Todo
   onEdit: (todo: Todo) => void
   onDelete: (todo: Todo) => void
+  onViewDetail: (todo: Todo) => void
   toggleStatus: (todo: Todo) => void
 }
 
-export function TodoItem({ onEdit, todo, onDelete, toggleStatus }: TodoItemProps) {
-  const handleDelete = () => onDelete(todo)
-  const handleToggleStatus = () => toggleStatus(todo)
-  const handleEdit = () => onEdit(todo)
+export function TodoItem({ onEdit, onViewDetail, todo, onDelete, toggleStatus }: TodoItemProps) {
+  const handleActionWithTodo = (action: (t: Todo) => void) => {
+    return () => action(todo)
+  }
+
+  const handleDelete = handleActionWithTodo(onDelete)
+  const handleToggleStatus = handleActionWithTodo(toggleStatus)
+  const handleEdit = handleActionWithTodo(onEdit)
+  const handleViewDetail = handleActionWithTodo(onViewDetail)
 
   const normalizedDueDate = new Date(todo.dueDate)
 
-  const dueDate = new Intl.DateTimeFormat("en-GB", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(normalizedDueDate)
+  const dueDate = DateFormat.formatTodoDate(normalizedDueDate)
 
   const isExpired = todo.status !== TodoStatus.COMPLETED && normalizedDueDate <= new Date()
 
@@ -39,7 +43,10 @@ export function TodoItem({ onEdit, todo, onDelete, toggleStatus }: TodoItemProps
           : isExpired ? red[100] : 'white',
       }}
       secondaryAction={
-        <Box>
+        <Box display='flex' gap='12px'>
+          <IconButton edge="end" onClick={handleViewDetail}>
+            <Visibility />
+          </IconButton>
           {todo.status !== TodoStatus.COMPLETED &&
             <IconButton edge="end" onClick={handleEdit}>
               <Edit />

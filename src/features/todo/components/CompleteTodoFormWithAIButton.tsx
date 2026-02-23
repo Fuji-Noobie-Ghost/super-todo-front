@@ -1,10 +1,9 @@
-import { useFormContext, useWatch, type UseFormReturn } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { Button } from "@mui/material";
 import { AutoAwesome } from "@mui/icons-material";
 import { useState } from "react";
 import type { TodoSuggestionInput, TodoSuggestionResponse } from "../todo.types";
 import { todoService } from "../todo.service";
-import { useFieldOwnerState } from "@mui/x-date-pickers/internals";
 
 interface CompleteTodoFormWithAIButtonProps {
   onSuggestionReveived: (suggestion: TodoSuggestionResponse) => void

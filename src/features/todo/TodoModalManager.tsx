@@ -4,7 +4,7 @@ import { TodoDetailModal } from "./components/TodoDetailModal";
 import { useCreateTodo, useUpdateTodo, useDeleteTodo } from "./todo.mutations";
 import type { CreateTodoSchema, UpdateTodoSchema } from "./todo.schema";
 import type { Todo } from "./todo.types";
-import { useTodoModal } from "./TodoModal";
+import { TodoModalType, useTodoModal } from "./TodoModal";
 
 export function TodoModalManager() {
   const todoModal = useTodoModal()
@@ -28,29 +28,29 @@ export function TodoModalManager() {
       createTodo.mutate(payload)
     }
 
-    todoModal.closeAddOrEditModal()
+    todoModal.closeModal()
   }
 
   const onDeleteConfirm = (todo: Todo) => {
     if (!todoModal) return
 
     deleteTodo.mutate(todo.id)
-    todoModal.closeDeleteConfirmation()
+    todoModal.closeModal()
   }
 
   return (
     <>
       <AddOrEditTodoModal
-        isOpen={todoModal.isAddOrEditModalOpen}
-        onClose={todoModal.closeAddOrEditModal}
+        isOpen={todoModal.modalType == TodoModalType.ADD_OR_EDIT}
+        onClose={todoModal.closeModal}
         todo={todoModal.selectedTodo}
         onSubmit={createOrUpdate}
       />
 
       {todoModal.selectedTodo && 
         <DeleteTodoConfirmationModal
-          isOpen={todoModal.isDeleteConfirmationOpen}
-          onClose={todoModal.closeDeleteConfirmation}
+          isOpen={todoModal.modalType == TodoModalType.DELETE_CONFIRMATION}
+          onClose={todoModal.closeModal}
           todo={todoModal.selectedTodo}
           onConfirm={onDeleteConfirm}
         />
@@ -58,9 +58,9 @@ export function TodoModalManager() {
 
       {todoModal.selectedTodo && 
         <TodoDetailModal
-          isOpen={todoModal.isDetailOpen}
+          isOpen={todoModal.modalType == TodoModalType.DETAIL}
           todo={todoModal.selectedTodo}
-          onClose={todoModal.closeTodoDetail}
+          onClose={todoModal.closeModal}
         />
       }
     </>
