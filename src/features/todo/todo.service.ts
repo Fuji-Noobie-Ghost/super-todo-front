@@ -1,5 +1,5 @@
 import type { AxiosInstance } from "axios";
-import type { Todo } from "./todo.types";
+import type { Todo, TodoSuggestionInput, TodoSuggestionResponse } from "./todo.types";
 import { apiClient } from "../../core/api/axios.config";
 import type { CreateTodoSchema, UpdateTodoSchema } from "./todo.schema";
 
@@ -8,6 +8,7 @@ export abstract class TodoService {
   abstract create(todo: CreateTodoSchema): Promise<Todo>
   abstract update(id: number, payload: UpdateTodoSchema): Promise<Todo>
   abstract delete(id: number): Promise<void>
+  abstract getSuggestion(payload: TodoSuggestionInput): Promise<TodoSuggestionResponse>
 }
 
 class TodoServiceImpl implements TodoService {
@@ -49,6 +50,16 @@ class TodoServiceImpl implements TodoService {
   delete = async (id: number): Promise<void> => {
     try {
       await this.client.delete(`/todo/${id}`)
+    } catch (error) {
+      console.error(error)
+      throw new Error('')
+    }
+  }
+
+  getSuggestion = async (payload: TodoSuggestionInput): Promise<TodoSuggestionResponse> => {
+    try {
+      const { data } = await this.client.post('/todo/suggestion', payload)
+      return data
     } catch (error) {
       console.error(error)
       throw new Error('')

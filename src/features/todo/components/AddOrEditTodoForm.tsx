@@ -1,13 +1,14 @@
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import { createTodoSchema, type CreateTodoFormValues, type CreateTodoSchema } from "../todo.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import type { Todo } from "../todo.types"
+import type { Todo, TodoSuggestionResponse } from "../todo.types"
 import { Box, Button, TextField } from "@mui/material"
 import { Save } from "@mui/icons-material"
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from "dayjs"
+import { CompleteTodoFormWithAIButton } from "./CompleteTodoFormWithAIButton"
 
 interface AddOrEditTodoFormProps {
   todo?: Todo | null
@@ -21,12 +22,18 @@ export function AddOrEditTodoForm({ todo, onSubmit }: AddOrEditTodoFormProps) {
       title: todo?.title ?? '',
       description: todo?.description ?? '',
       dueDate: todo?.dueDate ? dayjs(todo.dueDate) : dayjs(),
-    }
+    },
+    mode: 'onChange'
   })
 
   const submitHandler = (payload: CreateTodoSchema) => {
     console.log(payload)
     onSubmit(payload, todo)
+  }
+
+  const onSuggestionReceived = (suggestion: TodoSuggestionResponse) => {
+    form.setValue('description', suggestion.description)
+    form.setValue('dueDate', dayjs(suggestion.suggestedDateTime))
   }
 
   return (
@@ -53,6 +60,9 @@ export function AddOrEditTodoForm({ todo, onSubmit }: AddOrEditTodoFormProps) {
               />
             )}
           />
+
+          <CompleteTodoFormWithAIButton onSuggestionReveived={onSuggestionReceived} />
+
           <Controller
             control={form.control}
             name="description"

@@ -4,10 +4,13 @@ import type { Todo } from "./todo.types";
 interface ITodoModalContext {
   isAddOrEditModalOpen: boolean
   isDeleteConfirmationOpen: boolean
+  isDetailOpen: boolean
   openDeleteConfirmation: (todo: Todo) => void
   closeDeleteConfirmation: () => void
   openAddOrEditModal: (todo: Todo | null) => void
   closeAddOrEditModal: () => void
+  openTodoDetail: (todo: Todo) => void
+  closeTodoDetail: () => void
   selectedTodo: Todo | null
 }
 
@@ -21,6 +24,7 @@ export function TodoModalProvider({ children }: TodoModalProviderProps) {
   const [isDeleteConfirmationOpen, setIsDeleteConfirmation] = useState(false)
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null)
   const [isAddOrEditModalOpen, setIsAddOrEditModalOpen] = useState(false)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const openDeleteConfirmation = (todo: Todo) => {
     setSelectedTodo(todo)
@@ -42,6 +46,16 @@ export function TodoModalProvider({ children }: TodoModalProviderProps) {
     setSelectedTodo(null)
   }
 
+  const openTodoDetail = (todo: Todo) => {
+    setSelectedTodo(todo)
+    setIsDetailOpen(true)
+  }
+
+  const closeTodoDetail = () => {
+    setIsDetailOpen(false)
+    setSelectedTodo(null)
+  }
+
   return (
     <TodoModalContext.Provider
       value={{
@@ -51,6 +65,9 @@ export function TodoModalProvider({ children }: TodoModalProviderProps) {
         isAddOrEditModalOpen,
         openAddOrEditModal,
         closeAddOrEditModal,
+        isDetailOpen,
+        openTodoDetail,
+        closeTodoDetail,
         selectedTodo,
       }}
     >

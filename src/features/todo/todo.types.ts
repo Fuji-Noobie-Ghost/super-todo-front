@@ -16,3 +16,14 @@ export interface Todo {
   updatedAt: Date
 }
 
+export interface TodoSuggestionInput {
+  title: string
+  description?: string | null
+  context?: string | null
+}
+
+export interface TodoSuggestionResponse {
+  description: string
+  suggestedDateTime: Date
+  reasoning: string
+}
